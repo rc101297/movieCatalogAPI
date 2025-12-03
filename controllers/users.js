@@ -70,3 +70,20 @@ module.exports.login = async (req, res) => {
     return errorHandler(error, req, res);
   }
 };
+
+//User Details
+module.exports.getUserDetails = (req, res) => {
+  return User.findById(req.user.id)
+    .then((user) => {
+      if (!user) {
+        return res.status(403).send({ message: "invalid signature" });
+      } else {
+        const userObject = user.toObject();
+
+        delete userObject.password;
+
+        return res.status(200).send({ user: userObject });
+      }
+    })
+    .catch((error) => errorHandler(error, req, res));
+};
