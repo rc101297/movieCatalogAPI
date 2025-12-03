@@ -18,7 +18,7 @@ module.exports.register = async (req, res) => {
 
     // duplicate emails validation
     const existingUser = await User.findOne({
-      $or: { email: req.body.email },
+      email: req.body.email,
     });
 
     if (existingUser) {
