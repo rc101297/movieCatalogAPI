@@ -12,4 +12,7 @@ router.post("/register", userController.register);
 // Login
 router.post("/login", userController.login);
 
+// User details
+router.get("/details", verify, userController.getUserDetails);
+
 module.exports = router;
