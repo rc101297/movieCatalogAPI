@@ -10,31 +10,24 @@ module.exports.register = async (req, res) => {
   try {
     if (!req.body.email.includes("@")) {
       return res.status(400).send({ message: "Email invalid" });
-    } else if (req.body.mobileNo.length !== 11) {
-      return res.status(400).send({ message: "Mobile number invalid" });
     } else if (req.body.password.length < 8) {
       return res
         .status(400)
         .send({ message: "Password must be atleast 8 characters" });
     }
 
-    // duplicate emails and mobile number
+    // duplicate emails validation
     const existingUser = await User.findOne({
-      $or: [{ email: req.body.email }, { mobileNo: req.body.mobileNo }],
+      $or: { email: req.body.email },
     });
 
     if (existingUser) {
-      return res
-        .status(400)
-        .send({ message: "Email or mobile number already registered" });
+      return res.status(400).send({ message: "Email already registered" });
     }
 
     const newUser = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 10),
-      mobileNo: req.body.mobileNo,
     });
 
     await newUser.save();
